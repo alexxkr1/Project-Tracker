@@ -1,11 +1,12 @@
 package com.demo.tracker_api.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Set;
 
+@Data
 @Table(name = "projects")
 @Entity
 public class Project {

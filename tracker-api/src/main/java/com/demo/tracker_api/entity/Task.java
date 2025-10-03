@@ -2,10 +2,11 @@ package com.demo.tracker_api.entity;
 
 import com.demo.tracker_api.enums.TaskStatus;
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 
+@Data
 @Table(name = "tasks")
 @Entity
 public class Task {
