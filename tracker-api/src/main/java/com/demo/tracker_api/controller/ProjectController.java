@@ -1,10 +1,13 @@
 package com.demo.tracker_api.controller;
 
+import com.demo.tracker_api.dto.ProjectRequestDTO;
 import com.demo.tracker_api.entity.Project;
+import com.demo.tracker_api.mapper.ProjectMapper;
 import com.demo.tracker_api.service.ProjectService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +19,11 @@ import java.util.List;
 @Tag(name = "Projects", description = "Operations for creating and retrieving projects.")
 public class ProjectController {
     private final ProjectService service;
-    public ProjectController(ProjectService service) { this.service = service; }
+    private final ProjectMapper mapper;
+    public ProjectController(ProjectService service, ProjectMapper mapper) {
+        this.service = service;
+        this.mapper = mapper;
+    }
 
     @Operation(summary = "Get all projects")
     @GetMapping
@@ -30,8 +37,9 @@ public class ProjectController {
             }
     )
     @PostMapping
-    public ResponseEntity<Project> createProject(@RequestBody Project project) {
-        Project saved = service.createProject(project);
+    public ResponseEntity<Project> createProject(@Valid @RequestBody ProjectRequestDTO dto) {
+        Project newProject = mapper.toEntity(dto);
+        Project saved = service.createProject(newProject);
         return ResponseEntity.created(URI.create("/api/projects" + saved.getId())).body(saved);
     }
 
