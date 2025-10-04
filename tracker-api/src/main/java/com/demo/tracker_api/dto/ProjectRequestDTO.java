@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 
 public record ProjectRequestDTO (
     @NotBlank
-    @NotNull
     String name,
 
     @Size(max = 255)
