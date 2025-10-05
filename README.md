@@ -1,85 +1,40 @@
-## 💡 Full-stack Demoülesanne: Projektide Jälgimise Süsteem (Project Tracker)
+# Tracker Project - Full Docker Setup
 
-Loo lihtne, kuid funktsionaalne **Projektide Jälgimise Rakendus**, mis võimaldab kasutajal hallata projekte ja nendega seotud ülesandeid (taske). See ülesanne näitab sinu kiiret õppimisvõimet ja arusaama kaasaegsest täis-virna arendusest.
+This repository contains a full-stack project with:
 
-### ⚙️ Nõutud Tehnoloogiad
+- **Backend:** Java Spring Boot API (`tracker-api`)
+- **Frontend:** React (`tracker-frontend`)
+- **Database:** PostgreSQL (`db`)
 
-* **Backend:** **Java 21 LTS** ja **Spring Boot** (REST API loomiseks).
-* **Frontend:** **ReactJS** (kasuta funktsionaalseid komponente ja Hooks'e).
-* **Andmebaas:** **PostgreSQL** (käivitatakse Dockeris).
-* **Infrastruktuur:** **Docker** ja **Docker Compose**.
+## Architecture Overview
 
----
+The project is structured into three main services:
 
-## 🎯 Ülesande Detailid
+1. **PostgreSQL Database (`db`)**
+   - Stores all application data.
+   - Exposes port `5432` for local access.
+   - Uses Docker volume `postgres_data` to persist data across container restarts.
 
-### 1. Backend: Spring Boot API
+2. **Spring Boot API (`api`)**
+   - Java backend that provides REST endpoints.
+   - Runs on port `7070`.
+   - Connects to the PostgreSQL database (`db`) using the internal Docker network.
+   - Waits for the database to be healthy before starting.
 
-Loo **REST API** kahe andmemudeliga: **Project** (Projekt) ja **Task** (Ülesanne).
+3. **React Frontend (`web`)**
+   - Runs the user interface in a browser.
+   - Communicates with the backend API at `http://localhost:7070/api`.
+   - Runs on port `5173`.
 
-#### Entiteedid
+All services are connected using a custom Docker network `tracker-network` for internal communication.
 
-1.  **Project** (Projekt)
-    * `id` (Primary Key)
-    * `name` (Projekti nimi)
-    * `description` (Lühikirjeldus)
-    * `startDate` (Alguskuupäev)
-    * `endDate` (Eeldatav lõppkuupäev, võib olla `null`)
-    * **Seos:** Ühel Projektil on mitu Ülesannet (One-to-Many).
-2.  **Task** (Ülesanne)
-    * `id` (Primary Key)
-    * `title` (Ülesande pealkiri)
-    * `description`
-    * `status` (Olek: nt. `TODO`, `IN_PROGRESS`, `DONE`)
-    * `dueDate` (Tähtaeg)
-    * `projectId` (Foreign Key Projekti külge)
+## Booting the Project with Docker
 
-#### API Lõpp-punktid (Endpoints)
+To start the full project using Docker:
 
-Implementeeri järgmised CRUD operatsioonid **Spring Data JPA** abil:
+1. Make sure Docker and Docker Compose are installed.
+2. Navigate to the root of the repository.
+3. Run the following command to build and start all services: docker-compose up --build
+4. To stop all services run: docker-compose down 
 
-* **Projektid:**
-    * `GET /api/projects`: Loe kõik projektid.
-    * `POST /api/projects`: Loo uus projekt.
-    * `GET /api/projects/{id}`: Loe üks projekt koos sellega seotud ülesannetega.
-* **Ülesanded:**
-    * `POST /api/tasks`: Loo uus ülesanne (seosta `projectId` abil).
-    * `PUT /api/tasks/{id}/status`: Muuda ülesande olekut.
-
----
-
-### 2. Frontend: ReactJS Kasutajaliides
-
-Loo **Reacti rakendus**, mis suhtleb Spring Boot API-ga.
-
-#### Funktsionaalsus
-
-1.  **Projektide Nimekiri (Project List)**
-    * Näita tabeli/nimekirjana kõiki projekte.
-    * Võimalda navigeerida projekti detailvaatesse.
-2.  **Projekti Detailvaade (Project Details)**
-    * Kuva projekti detailne info.
-    * Näita projekti **kõigi ülesannete nimekirja**.
-    * Võimalus **lisada uus ülesanne** sellele projektile.
-    * Võimalus muuta ülesande olekut (`status`) (nt. rippmenüü või nupu abil).
-
-*Märkus: Keskendu funktsionaalsusele, mitte keerukale disainile. Andmeside ja kasutajakogemus olgu sujuv.*
-
----
-
-### 3. Infrastruktuur: Docker ja Dokumentatsioon
-
-Loo terviklahendus, mis on lihtsalt käivitatav ja jagatav.
-
-1.  **Dockerfailid:**
-    * Loo optimeeritud `Dockerfile` Spring Booti backend'i jaoks.
-    * Loo `Dockerfile` Reacti frontend'i jaoks.
-2.  **Docker Compose:**
-    * Loo `docker-compose.yml` fail, mis käivitab **kolm teenust**: Spring Boot, React ja PostgreSQL (kasuta `volume`'eid).
-3.  **`README.md` fail:**
-    * Loo selge `README.md` fail, mis sisaldab **juhendit**, kuidas kogu virn lokaalselt **ühe käsuga** (`docker compose up -d`) käivitada.
-
----
----
-
-*Antud ülesanne on genereeritud Gemini AI poolt eesmärgiga luua realistlik full-stack arendusprojekt, mis demonstreerib kiire õppimise ja uute tehnoloogiate (Java, Spring Boot, React) omandamise oskust.*
+   

@@ -41,7 +41,7 @@ services:
     networks:
       - tracker-network
     restart: unless-stopped
-
+  # React Frontend
   web:
     build:
       context: ./tracker-frontend
