@@ -1,6 +1,7 @@
 package com.demo.tracker_api.service;
 
 import com.demo.tracker_api.entity.Task;
+import com.demo.tracker_api.enums.TaskStatus;
 import com.demo.tracker_api.repository.TaskRepository;
 import org.springframework.stereotype.Service;
 
@@ -12,5 +13,10 @@ public class TaskService {
     public TaskService(TaskRepository repo) { this.repo = repo; }
 
     public Optional<Task> findById(Long id) { return repo.findById(id); }
-    public Task save(Task t) { return repo.save(t); }
+    public Task save(Task t) {
+        if (t.getStatus() == null) {
+            t.setStatus(TaskStatus.TODO);
+        }
+
+        return repo.save(t); }
 }

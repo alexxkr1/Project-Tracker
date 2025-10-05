@@ -1,9 +1,11 @@
 package com.demo.tracker_api.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -27,6 +29,7 @@ public class Project {
     private LocalDateTime endDate;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Task> tasks;
+    @JsonManagedReference
+    private List<Task> tasks;
 
 }
