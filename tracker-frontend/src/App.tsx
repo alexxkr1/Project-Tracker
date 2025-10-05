@@ -1,29 +1,27 @@
-import { useEffect, useState } from 'react'
+import { Routes, Route } from "react-router-dom";
+import ProjectsPage from "./pages/ProjectsPage"; 
+import ProjectDetailPage from "./pages/ProjectDetailsPage";
 
-// import './App.css'
-import { getAllProjects } from './service/projectService'
+const AppContent = () => {
 
-function App() {
-  const [projects, setProjects] = useState([])
+    return (
+        <div className="min-h-screen bg-gray-100 font-sans">
+            <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+                <Routes>
+                    <Route path="/" element={<ProjectsPage />} />
+                    <Route path="/projects/:id" element={<ProjectDetailPage />} />
+                    <Route
+                        path="*"
+                        element={
+                            <h1 className="text-center p-10 text-xl text-red-500">
+                                404 Not Found
+                            </h1>
+                        }
+                    />
+                </Routes>
+            </main>
+        </div>
+    );
+};
 
-  useEffect(() => {
-    const fetchProjects = async ()=> {
-      const results = await getAllProjects();
-      setProjects(results)
-    }
-
-    fetchProjects();
-  }, [])
-
-  return (
-    <>
-    midagi v
-    { import.meta.env.API_URL}
-      {/* {projects?.map((product) => (
-        <span>{product}</span>
-      ))} */}
-    </>
-  )
-}
-
-export default App
+export default AppContent;
