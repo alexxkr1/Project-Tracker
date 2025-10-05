@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database Service
+  db:
+    image: postgres:16-alpine
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: ${DB_USER:-tracker_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-tracker_password}
+      POSTGRES_DB: ${DB_NAME:-tracker_db}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - tracker-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Java Spring Boot API Service
+  api:
+    build:
+      context: ./tracker-api
+      dockerfile: Dockerfile.api
+    container_name: tracker_api
+    ports:
+      - "7070:7070"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${DB_NAME:-tracker_db}
+      SPRING_DATASOURCE_USERNAME: ${DB_USER:-tracker_user}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD:-tracker_password}
+      SPRING_PROFILES_ACTIVE: prod
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - tracker-network
+    restart: unless-stopped
+
+  web:
+    build:
+      context: ./tracker-frontend
+      dockerfile: Dockerfile.web
+      args:
+        VITE_API_URL: "http://localhost:7070/api"
+    container_name: tracker-frontend
+    ports:
+      - "5173:80"
+    networks:
+      - tracker-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
+networks:
+  tracker-network:
+    driver: bridge

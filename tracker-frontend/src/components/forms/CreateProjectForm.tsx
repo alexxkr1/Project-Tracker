@@ -11,6 +11,7 @@ const CreateProjectForm = ({ onSubmitSuccess }: CreateProjectFormProps) => {
     const [formData, setFormData] = useState<IProjectRequest>({
         name: '',
         description: '',
+        //@ts-expect-error Types need to be improved
         startDate: new Date().toISOString(),
         endDate: '',
     });
@@ -89,6 +90,7 @@ const CreateProjectForm = ({ onSubmitSuccess }: CreateProjectFormProps) => {
                         type="datetime-local"
                         id="startDate"
                         name="startDate"
+                        //@ts-expect-error Types need to be improved
                         value={formData.startDate}
                         onChange={handleChange}
                         className={inputClasses}
