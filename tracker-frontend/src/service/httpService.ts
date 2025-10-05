@@ -1,12 +1,15 @@
-import axios from "axios";
+import axios, { type AxiosInstance } from "axios";
 
-const axiosInstace = axios.create({
-    baseURL: import.meta.env.VITE_API_URL
-})
+const axiosInstance: AxiosInstance = axios.create({
+  baseURL: import.meta.env.VITE_API_URL, 
+   headers: {
+    "Content-Type": "application/json",
+  }
+});
 
 export default {
-    get: axiosInstace.get,
-    post: axiosInstace.post,
-    put: axiosInstace.put,
-    delete: axiosInstace.delete,
-}
+  get: axiosInstance.get,
+  post: axiosInstance.post,
+  put: axiosInstance.put,
+  delete: axiosInstance.delete,
+};
